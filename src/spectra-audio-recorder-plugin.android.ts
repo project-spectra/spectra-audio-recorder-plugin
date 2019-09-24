@@ -4,21 +4,42 @@ declare var org: any;
 
 export class SpectraAudioRecorderPlugin {
 
-    private _audioRecorder: any;
+    private _audioRecorderAsyncTask: any;
 
     public HelloWorld(): string {
         return org.project_spectra.spectraaudiorecorder.AudioRecorder.HelloWorld();
     }
 
-    public launchTask(recordingPath: String): void {
-        this._audioRecorder = new org.project_spectra.spectraaudiorecorder.AudioRecorder();
+    public launchTask(recordingPath: string): Promise<any> {
+        console.log('Audio Recorder Plugin Starting.');
+        console.log(recordingPath);
 
-        this._audioRecorder.launchTask(recordingPath);
-        //?org.project_spectra.spectraaudiorecorder.AudioRecorder.launchTask(recordingPath);
+        return new Promise (async (resolve, reject) => {
+            try {
+                this._audioRecorderAsyncTask =
+                new org.project_spectra.spectraaudiorecorder.AudioRecorder.RecordWaveTask();
+
+                //argument should be the File file.wav
+                var wavFile = new File([""], recordingPath);
+                console.log(wavFile);
+                
+                this._audioRecorderAsyncTask.execute(wavFile);
+            } catch (ex) {
+                console.log(ex);
+                reject(ex);
+            }
+        });
     }
 
-    public stopTask(): void {
-        this._audioRecorder.stopTask();
-        //?org.project_spectra.spectraaudiorecorder.AudioRecorder.stopTask();
+    public stopTask() {
+        return new Promise (async (resolve, reject) => {
+            try {
+                this._audioRecorderAsyncTask.cancel(true);
+                this._audioRecorderAsyncTask = null;
+            } catch (ex) {
+                console.log(ex);
+                reject(ex);
+            }
+        });
     }
 }
