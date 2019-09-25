@@ -20,10 +20,10 @@ export class SpectraAudioRecorderPlugin {
                 new org.project_spectra.spectraaudiorecorder.AudioRecorder.RecordWaveTask();
 
                 //argument should be the File file.wav
-                var wavFile = new File([""], recordingPath);
-                console.log(wavFile);
+                //var wavFile = new File([""], recordingPath);
+                console.log("Recording to: " + recordingPath);
                 
-                this._audioRecorderAsyncTask.execute(wavFile);
+                this._audioRecorderAsyncTask.execute(recordingPath);
             } catch (ex) {
                 console.log(ex);
                 reject(ex);
