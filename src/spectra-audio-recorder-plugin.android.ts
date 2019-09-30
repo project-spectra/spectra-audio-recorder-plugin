@@ -1,4 +1,5 @@
 import { Common } from './spectra-audio-recorder-plugin.common';
+import { android as androidApp } from "tns-core-modules/application";
 
 declare var org: any;
 
@@ -11,19 +12,16 @@ export class SpectraAudioRecorderPlugin {
     }
 
     public launchTask(recordingPath: string): Promise<any> {
-        console.log('Audio Recorder Plugin Starting.');
-        console.log(recordingPath);
+        console.log('Audio Recorder Plugin Starting...');
+        //console.log(recordingPath);
 
         return new Promise (async (resolve, reject) => {
             try {
                 this._audioRecorderAsyncTask =
-                new org.project_spectra.spectraaudiorecorder.AudioRecorder.RecordWaveTask();
+                new org.project_spectra.spectraaudiorecorder.AudioRecorder.RecordWaveTask(androidApp.context); //Constructor
 
-                //argument should be the File file.wav
-                //var wavFile = new File([""], recordingPath);
-                console.log("Recording to: " + recordingPath);
-                
-                this._audioRecorderAsyncTask.execute(recordingPath);
+                //console.log("Recording to: " + recordingPath);
+                this._audioRecorderAsyncTask.execute(null); //AsyncTask params
             } catch (ex) {
                 console.log(ex);
                 reject(ex);
@@ -34,7 +32,7 @@ export class SpectraAudioRecorderPlugin {
     public stopTask() {
         return new Promise (async (resolve, reject) => {
             try {
-                this._audioRecorderAsyncTask.cancel(true);
+                this._audioRecorderAsyncTask.cancel(false);
                 this._audioRecorderAsyncTask = null;
             } catch (ex) {
                 console.log(ex);
